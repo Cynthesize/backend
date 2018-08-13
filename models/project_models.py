@@ -1,11 +1,14 @@
-class Project(models.Model):
-    name = models.CharField(max_length=200, default=None)
-    category = models.CharField(max_length=200, default=None)
-    checkpoint = models.CharField(max_length=200, default=None)
-    comments = models.ListField()
-    collaborators = models.ListField()
-    description = models.TextField()
-    is_public = models.BooleanField(default=False)
-    owner = models.CharField(max_length=200, default=None)
-    tags = models.ListField()
-    upvotes = models.IntegerField(default=0)
+import datetime
+from mongoengine import *
+
+class Project(Document):
+    name = StringField(max_length=200, default=None)
+    category = StringField(max_length=200, default=None)
+    checkpoint = StringField(max_length=200, default=None)
+    comments = ListField()
+    collaborators = ListField()
+    description = StringField()
+    is_public = BooleanField(default=False)
+    owner = StringField(max_length=200, default=None)
+    tags = ListField()
+    upvotes = IntField(default=0)

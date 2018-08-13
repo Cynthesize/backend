@@ -1,14 +1,18 @@
-class UserModel(models.Model):
-    email = models.EmailField(default=None)
-    ideas_contributed = models.ListField()
-    last_login = models.DateTimeField(auto_now=True)
-    number_of_login = models.IntegerField(default=0)
-    profile_picture = models.CharField(max_length=250, default=None)
-    projects_owned = models.ArrayReferenceField(to=Project, on_delete=models.CASCADE, related_name='project_owner')
-    projects_contributed = models.ListField()
-    projects_in_review = models.ArrayReferenceField(to=Project, on_delete=models.CASCADE, related_name='review_owner')
-    generates_revenue = models.ArrayReferenceField(to=Project, on_delete=models.CASCADE, related_name='revenue_owner')
-    location = models.CharField(max_length=250, default=None)
-    organisation = models.CharField(max_length=250, default=None)
-    skills_known = models.ListField()
-    subscription = models.BooleanField(default=True)
+import datetime
+import pymongo
+from mongoengine import *
+
+class UserModel(Document):
+    email = StringField(required=True, default=None)
+    ideas_contributed = ListField()
+    last_login = DateTimeField(auto_now=True)
+    number_of_login = IntField(default=0)
+    profile_picture = StringField(max_length=250, default=None)
+    projects_owned = ListField()
+    projects_contributed = ObjectIdField()
+    projects_in_review = ListField()
+    generates_revenue = ListField()
+    location = StringField(max_length=250, default=None)
+    organisation = StringField(max_length=250, default=None)
+    skills_known = ListField()
+    subscription = BooleanField(default=True)
