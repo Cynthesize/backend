@@ -1,8 +1,7 @@
 import models.project_models
 import feconf
-
 import string
-import random
+from random import *
 
 class ProjectDomain(object):
     """Domain objects for Project"""
@@ -25,8 +24,12 @@ class ProjectDomain(object):
         self.upvotes = upvotes
     
     @classmethod
-    def generate_id(size=6, chars=string.ascii_uppercase + string.digits):
-        return 'project'.join(random.choice(chars) for _ in range(size))
+    def generate_id(size = 6, chars = string.ascii_uppercase + string.digits):
+        generated_id = []
+        for _ in range(6):
+            generated_id.append(choice(chars))
+        project_id = 'project.' + ''.join(generated_id)
+        return project_id
 
     @classmethod
     def create_default_project(cls, project_id, owner):

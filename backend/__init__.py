@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 CORS(app)
 mongo_uri = 'mongodb://127.0.0.1:27017/wareahaus'
+mongo_client = PyMongo(app, mongo_uri)
 
 from backend.routes import *
 
-mongo_client = PyMongo(app, mongo_uri)
