@@ -9,3 +9,7 @@ def create_project():
 
     mongo_client.db.projects.insert_one(project.__dict__)
     print('Project Created with id ', project_id)
+
+
+def get_projects(project_count = 5, current_project_itr = 0):
+    pass
