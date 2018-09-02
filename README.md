@@ -1,19 +1,82 @@
-# Warehaus
+# Flask JWT Auth
 
-### Project Flow
-- Stage 1: Pre-launch. The idea page has to be online before the startup officially launches. 
-- Stage 2: Post-launch. As much functionality has to be integrated as possible. 
-- Stage 3: TBD. 
+[![Build Status](https://travis-ci.org/realpython/flask-jwt-auth.svg?branch=master)](https://travis-ci.org/realpython/flask-jwt-auth)
 
-### Project Design 
-We’ll be having four main folders or layers: 	
-	1. Models 	2. Object 	3. Services 	4. Controllers
+## Want to learn how to build this project?
 
-**Model**: There will be one file for user related models in the user_models.py file. This file will have different classes which will contain different info. Eg: UserInfoModel and UserProjectModel are the classes which will be in the user_model.py
+Check out the [blog post](https://realpython.com/blog/python/token-based-authentication-with-flask/).
 
-**Object**: Objects for the classes of the model will be defined in this layer. This will be defined under user_domain.py. This file will contain classes like UserInfoDomainObject and UserProjectDomainObject.
+## Want to use this project?
 
-**Services**: This is the layer in which all the functions will be written. This layer will include all the logic and will be interacting with the database. The file name will be of type user_services.py.
+### Basics
 
-**Controller**: This layer will use functions defined in service layer. Here all the API requests will be made. All the routes will be served here.
+1. Fork/Clone
+1. Activate a virtualenv
+1. Install the requirements
 
+### Set Environment Variables
+
+Update *project/server/config.py*, and then run:
+
+```sh
+$ export APP_SETTINGS="project.server.config.DevelopmentConfig"
+```
+
+or
+
+```sh
+$ export APP_SETTINGS="project.server.config.ProductionConfig"
+```
+
+Set a SECRET_KEY:
+
+```sh
+$ export SECRET_KEY="change_me"
+```
+
+### Create DB
+
+Create the databases in `psql`:
+
+```sh
+$ psql
+# create database flask_jwt_auth
+# create database flask_jwt_auth_test
+# \q
+```
+
+Create the tables and run the migrations:
+
+```sh
+$ python manage.py create_db
+$ python manage.py db init
+$ python manage.py db migrate
+```
+
+### Run the Application
+
+```sh
+$ python manage.py runserver
+```
+
+Access the application at the address [http://localhost:5000/](http://localhost:5000/)
+
+> Want to specify a different port?
+
+> ```sh
+> $ python manage.py runserver -h 0.0.0.0 -p 8080
+> ```
+
+### Testing
+
+Without coverage:
+
+```sh
+$ python manage.py test
+```
+
+With coverage:
+
+```sh
+$ python manage.py cov
+```
