@@ -4,9 +4,8 @@
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 
-from project.server.models import user_models
-from project.server.services import user_services
-# from project.server import app, bcrypt
+from project.server import bcrypt, db
+from project.server.models import User, BlacklistToken
 
 auth_blueprint = Blueprint('auth', __name__)
 
@@ -20,21 +19,18 @@ class RegisterAPI(MethodView):
         # get the post data
         post_data = request.get_json()
         # check if user already exists
-        user = user_services.get_user_by_email_id(post_data.get('email'))
+        user = User.query.filter_by(email=post_data.get('email')).first()
         if not user:
             try:
-                user = user_models.UserModel(
-                    username = post_data.get('username'),
-                    email = post_data.get('email'),
-                    password = post_data.get('password'),
-                    first_name = post_data.get('first_name'),
-                    last_name = post_data.get('last_name'),
-                    gender = post_data.get('gender')
+                user = User(
+                    email=post_data.get('email'),
+                    password=post_data.get('password')
                 )
                 # insert the user
-                user.save()
+                db.session.add(user)
+                db.session.commit()
                 # generate the auth token
-                auth_token = user_services.encode_auth_token(user.id)
+                auth_token = user.encode_auth_token(user.id)
                 responseObject = {
                     'status': 'success',
                     'message': 'Successfully registered.',
@@ -50,25 +46,28 @@ class RegisterAPI(MethodView):
         else:
             responseObject = {
                 'status': 'fail',
-                'message': 'user_models.UserModel already exists. Please Log in.',
+                'message': 'User already exists. Please Log in.',
             }
             return make_response(jsonify(responseObject)), 202
 
 
 class LoginAPI(MethodView):
     """
-    user_models.UserModel Login Resource
+    User Login Resource
     """
     def post(self):
         # get the post data
         post_data = request.get_json()
         try:
             # fetch the user data
-            user = user_services.get_user_by_email_id(post_data.get('email'))
+            user = User.query.filter_by(
+                email=post_data.get('email')
+            ).first()
             if user and bcrypt.check_password_hash(
                 user.password, post_data.get('password')
             ):
-                auth_token = user_services.encode_auth_token(user.id)
+                auth_token = user.encode_auth_token(user.id)
+                print(auth_token)
                 if auth_token:
                     responseObject = {
                         'status': 'success',
@@ -79,7 +78,7 @@ class LoginAPI(MethodView):
             else:
                 responseObject = {
                     'status': 'fail',
-                    'message': 'user_models.UserModel does not exist.'
+                    'message': 'User does not exist.'
                 }
                 return make_response(jsonify(responseObject)), 404
         except Exception as e:
@@ -93,7 +92,7 @@ class LoginAPI(MethodView):
 
 class UserAPI(MethodView):
     """
-    user_models.UserModel Resource
+    User Resource
     """
     def get(self):
         # get the auth token
@@ -110,12 +109,17 @@ class UserAPI(MethodView):
         else:
             auth_token = ''
         if auth_token:
-            resp = user_services.decode_auth_token(auth_token)
+            resp = User.decode_auth_token(auth_token)
             if not isinstance(resp, str):
-                user = user_services.get_user_by_user_id(resp)
+                user = User.query.filter_by(id=resp).first()
                 responseObject = {
                     'status': 'success',
-                    'data': user.to_dict()
+                    'data': {
+                        'user_id': user.id,
+                        'email': user.email,
+                        'admin': user.admin,
+                        'registered_on': user.registered_on
+                    }
                 }
                 return make_response(jsonify(responseObject)), 200
             responseObject = {
@@ -143,14 +147,14 @@ class LogoutAPI(MethodView):
         else:
             auth_token = ''
         if auth_token:
-            resp = user_services.decode_auth_token(auth_token)
+            resp = User.decode_auth_token(auth_token)
             if not isinstance(resp, str):
                 # mark the token as blacklisted
-                # blacklist_token = BlacklistToken(token=auth_token)
+                blacklist_token = BlacklistToken(token=auth_token)
                 try:
                     # insert the token
-                    # db.session.add(blacklist_token)
-                    # db.session.commit()
+                    db.session.add(blacklist_token)
+                    db.session.commit()
                     responseObject = {
                         'status': 'success',
                         'message': 'Successfully logged out.'
@@ -180,3 +184,25 @@ registration_view = RegisterAPI.as_view('register_api')
 login_view = LoginAPI.as_view('login_api')
 user_view = UserAPI.as_view('user_api')
 logout_view = LogoutAPI.as_view('logout_api')
+
+# add Rules for API Endpoints
+auth_blueprint.add_url_rule(
+    '/api/auth/register',
+    view_func=registration_view,
+    methods=['POST']
+)
+auth_blueprint.add_url_rule(
+    '/api/auth/login',
+    view_func=login_view,
+    methods=['POST']
+)
+auth_blueprint.add_url_rule(
+    '/api/auth/status',
+    view_func=user_view,
+    methods=['GET']
+)
+auth_blueprint.add_url_rule(
+    '/api/auth/logout',
+    view_func=logout_view,
+    methods=['POST']
+)

@@ -19,7 +19,7 @@ class TestDevelopmentConfig(TestCase):
         self.assertTrue(app.config['DEBUG'] is True)
         self.assertFalse(current_app is None)
         self.assertTrue(
-            app.config['MONGO_CONNECTION_URI'] == 'postgresql://postgres:@localhost/flask_jwt_auth'
+            app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql://postgres:@localhost/flask_jwt_auth'
         )
 
 
@@ -32,7 +32,7 @@ class TestTestingConfig(TestCase):
         self.assertFalse(app.config['SECRET_KEY'] is 'my_precious')
         self.assertTrue(app.config['DEBUG'])
         self.assertTrue(
-            app.config['MONGO_CONNECTION_URI'] == 'postgresql://postgres:@localhost/flask_jwt_auth_test'
+            app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql://postgres:@localhost/flask_jwt_auth_test'
         )
 
 

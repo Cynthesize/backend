@@ -1,12 +1,4 @@
-# Flask JWT Auth
-
-[![Build Status](https://travis-ci.org/realpython/flask-jwt-auth.svg?branch=master)](https://travis-ci.org/realpython/flask-jwt-auth)
-
-## Want to learn how to build this project?
-
-Check out the [blog post](https://realpython.com/blog/python/token-based-authentication-with-flask/).
-
-## Want to use this project?
+# Startup Backend
 
 ### Basics
 
@@ -34,25 +26,6 @@ Set a SECRET_KEY:
 $ export SECRET_KEY="change_me"
 ```
 
-### Create DB
-
-Create the databases in `psql`:
-
-```sh
-$ psql
-# create database flask_jwt_auth
-# create database flask_jwt_auth_test
-# \q
-```
-
-Create the tables and run the migrations:
-
-```sh
-$ python manage.py create_db
-$ python manage.py db init
-$ python manage.py db migrate
-```
-
 ### Run the Application
 
 ```sh
@@ -67,16 +40,3 @@ Access the application at the address [http://localhost:5000/](http://localhost:
 > $ python manage.py runserver -h 0.0.0.0 -p 8080
 > ```
 
-### Testing
-
-Without coverage:
-
-```sh
-$ python manage.py test
-```
-
-With coverage:
-
-```sh
-$ python manage.py cov
-```

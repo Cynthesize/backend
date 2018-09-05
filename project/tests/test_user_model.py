@@ -3,42 +3,35 @@
 
 
 import unittest
-from mongoengine import *
 
-from project.server.models.user_models import UserModel
+from project.server import db
+from project.server.models import User
 from project.tests.base import BaseTestCase
-from project.server.services import user_services
 
 
 class TestUserModel(BaseTestCase):
 
     def test_encode_auth_token(self):
-        user = UserModel(
-            username = 'username',
-            email = 'test@test.com',
-            password = 'test',
-            first_name = 'first_name',
-            last_name = 'last_name',
-            gender = 'male'
+        user = User(
+            email='test@test.com',
+            password='test'
         )
-        user.save()
-        auth_token = user_services.encode_auth_token(user.id)
+        db.session.add(user)
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
         self.assertTrue(isinstance(auth_token, bytes))
 
     def test_decode_auth_token(self):
-        user = UserModel(
-            username = 'username',
-            email = 'test@test.com',
-            password = 'test',
-            first_name = 'first_name',
-            last_name = 'last_name',
-            gender = 'male'
+        user = User(
+            email='test@test.com',
+            password='test'
         )
-        user.save()
-        auth_token = user_services.encode_auth_token(user.id)
+        db.session.add(user)
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
         self.assertTrue(isinstance(auth_token, bytes))
 
-        self.assertTrue(user_services.decode_auth_token(
+        self.assertTrue(User.decode_auth_token(
             auth_token.decode("utf-8") ) == 1)
 
 
