@@ -26,6 +26,25 @@ Set a SECRET_KEY:
 $ export SECRET_KEY="change_me"
 ```
 
+### Create DB
+
+Create the databases in `psql`:
+
+```sh
+$ psql
+# create database flask_jwt_auth
+# create database flask_jwt_auth_test
+# \q
+```
+
+Create the tables and run the migrations:
+
+```sh
+$ python manage.py create_db
+$ python manage.py db init
+$ python manage.py db migrate
+```
+
 ### Run the Application
 
 ```sh
