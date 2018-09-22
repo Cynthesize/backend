@@ -1,16 +1,10 @@
-# Django RESTful API + JWT authentication Boilerplate
+# Django RESTful API + JWT authentication 
 
-A [Django](https://www.djangoproject.com/) REST API boilerplate.
+A [Django](https://www.djangoproject.com/) REST API
 this project uses: 
  - **[Django REST framework](http://www.django-rest-framework.org/)** for API.
  - **[JWT](https://jwt.io/)** for authentication process.
 
-## Table of content
-
-- [Django version](#django-version)
-- [Getting started (Windows)](#getting-started-windows)
-- [Deploy (Docker)](#deploy-docker)
-- [License](#license)
 
 ## Django version
 
@@ -45,8 +39,8 @@ This project will focus on Django 2.0.7.
     ```
 8. **Set required environment variables:**
     ```bash
-    set DEV=true
-    set DJANGO_SECRET=<YOUR_PROJECT_SECRET>
+    export DEV=true
+    export DJANGO_SECRET=<YOUR_PROJECT_SECRET>
     ```
 9. **Migrate models to database and Collect static files:**
     ```bash
@@ -58,21 +52,3 @@ This project will focus on Django 2.0.7.
     ```bash
     python manage.py runserver 127.0.0.1:8001
     ```
-
-## Deploy (Docker):
-
-Required environment variables:
-```bash
-POSTGRESQL_ADDON_DB='<server db name>'
-POSTGRESQL_ADDON_HOST='<DB_URL>'
-POSTGRESQL_ADDON_PASSWORD=''
-POSTGRESQL_ADDON_PORT=''
-POSTGRESQL_ADDON_USER=''
-DEV='false'
-DJANGO_SECRET='<YOUR_DJANGO_SECRET>'
-```
-See [Dockerfile](Dockerfile) for details.
-
-## License
-
-This project follows the GNU GPLv3. See the [LICENSE](LICENSE) for details.
