@@ -15,4 +15,5 @@ urlpatterns = [
     # Views are defined in Rest Framework JWT, but we're assigning custom paths.
     path('api/login/', jwt_views.ObtainJSONWebToken.as_view(), name='user-login'),
     path('api/login/refresh/', jwt_views.RefreshJSONWebToken.as_view(), name='user-login-refresh'),
+    path('api/add_idea/', views.AddIdeaView.as_view(), name='add-idea'),
 ]

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 import uuid
+import datetime
 
 
 def jwt_get_secret_key(user_model):
@@ -97,3 +98,14 @@ class RestUser(AbstractBaseUser):
     @property
     def is_active(self):
          return self.active
+
+
+class Idea(models.Model):
+    idea_name = models.CharField(max_length=50, unique=True)
+    owner = models.CharField(max_length=40)
+    description = models.CharField(max_length=300)
+    likes = models.IntegerField(default=0)
+    created_on = models.DateTimeField(default=datetime.datetime.now())
+
+    USERNAME_FIELD = 'idea_name'
+    REQUIRED_FIELDS = ['owner', 'description']

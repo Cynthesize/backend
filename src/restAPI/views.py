@@ -4,16 +4,8 @@ from djoser import serializers
 from rest_framework import views, permissions, status
 from rest_framework.response import Response
 from rest_framework import permissions
-from restAPI.models import RestUser
-
- 
-class UserSerializer(serializers.UserSerializer):
-  
-    class Meta(object):
-        model = RestUser
-        fields = ('id', 'email', 'full_name',
-                  'date_joined', 'password', 'username')
-        extra_kwargs = {'password': {'write_only': True}}
+from restAPI import models
+from .serializers import *
 
 
 class RestUserLogoutAllView(views.APIView):
@@ -33,7 +25,7 @@ class RestUserView(UserView):
     Uses the default Djoser view, but add the IsOtpVerified permission.
     Use this endpoint to retrieve/update user.
     """
-    model = RestUser
+    model = models.RestUser
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
  
@@ -52,3 +44,14 @@ class RestUserDeleteView(UserDeleteView):
     """
     serializer_class = serializers.UserDeleteSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class AddIdeaView(views.APIView):
+    model = models.Idea
+
+    def post(self, request):
+        idea_data = request.data
+        idea = IdeaSerializer(data=idea_data)
+        idea.is_valid(raise_exception=True)
+        idea.save()
+        return Response(idea.data, status=status.HTTP_201_CREATED)
