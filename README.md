@@ -13,9 +13,9 @@ This project will focus on Django 2.0.7.
 ## Getting started (Windows):
 
 1. **Install [Python 3.6](https://www.python.org/)**.
-2. **Clone this repository** or [download the zip](https://github.com/Kamasado/Django-REST-API-JWT-boilerplate/archive/master.zip)
+2. **Clone this repository**
     ```bash
-    git clone https://github.com/Kamasado/Django-REST-API-JWT-boilerplate
+    git clone https://github.com/WickedBrat/backend
     ```
 3. **Make sure you're in the directory you just created:**
     ```bash
@@ -23,7 +23,7 @@ This project will focus on Django 2.0.7.
     ```
 4. **Create a Python venv:**
     ```bash
-    virtualenv .venv
+    virtualenv -p python3 .venv
     ```
 5. **Activate the venv:**
     ```bash
