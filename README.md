@@ -19,7 +19,7 @@ This project will focus on Django 2.0.7.
     ```
 3. **Make sure you're in the directory you just created:**
     ```bash
-    cd django-api-boilerplate
+    cd backend
     ```
 4. **Create a Python venv:**
     ```bash
