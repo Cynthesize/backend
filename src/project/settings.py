@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.messages',
+    'django.contrib.sessions',
     'whitenoise.runserver_nostatic', # Static files on development
     'django.contrib.staticfiles',
     'rest_framework', # Django rest framework for RESTful API
@@ -127,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'America/Caracas'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

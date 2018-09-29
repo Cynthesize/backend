@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 import uuid
 import datetime
 
@@ -7,105 +8,68 @@ import datetime
 def jwt_get_secret_key(user_model):
     return user_model.jwt_secret
 
+
 class RestUserManager(BaseUserManager):
-    def create_user(
-        self, email, username, full_name, profile_picture=None, gender=None,
-        password=None, is_admin=False, is_staff=False, is_active=True):
-        if not email:
-            raise ValueError("User must have an email")
-        if not password:
-            raise ValueError("User must have a password")
-        if not full_name:
-            raise ValueError("User must have a full name")
+    def create_user(self, username, full_name, email, password=None):
+        """
+        Creates and saves a User with the given email and password.
+        """
+        if not username:
+            raise ValueError('Username must be present.')
 
         user = self.model(
-            email=self.normalize_email(email)
+            username=username,
+            full_name=full_name,
+            email=email
         )
-        user.username = username
-        user.full_name = full_name
-        user.set_password(password)  # change password to hash
-        # user.profile_picture = profile_picture
-        user.gender = gender
-        user.admin = is_admin
-        user.profile_picture = profile_picture
-        user.staff = is_staff
-        user.active = is_active
-        user.save(using=self._db)
-        return user
 
-    def create_staffuser(self, email, profile_picture, gender, full_name, password=None):
-        user = self.create_user(
-            email,
-            full_name,
-            profile_picture,
-            gender,
-            password=password,
-            is_staff=True,
-        )
-        return user
-
-    def create_superuser(self, email, full_name, profile_picture, password=None, **extra_fields):
-        if not email:
-            raise ValueError("User must have an email")
-        if not password:
-            raise ValueError("User must have a password")
-        if not full_name:
-            raise ValueError("User must have a full name")
-
-        user = self.model(
-            email=self.normalize_email(email)
-        )
-        user.full_name = full_name
         user.set_password(password)
-        user.profile_picture = profile_picture
-        user.admin = True
-        user.staff = True
-        user.active = True
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, full_name, email, password):
+        """
+        Creates and saves a superuser with the given email and
+        password.
+        """
+        user = self.create_user(
+            username,
+            password=password,
+            full_name=full_name,
+            email=email
+        )
+        user.is_admin = True
+        user.is_staff = True
         user.save(using=self._db)
         return user
 
 
-class RestUser(AbstractBaseUser):
-    username = models.CharField(max_length=30)
-    full_name = models.CharField(max_length=30)
-    email = models.EmailField(max_length=255, unique=True,)
-    gender = models.CharField(max_length=20, blank=True, default='rather_not_say')
-    active = models.BooleanField(default=True)
-    staff = models.BooleanField(default=False)  # a admin user; non super-user
-    admin = models.BooleanField(default=False)  # a superuser
+class RestUser(AbstractBaseUser, PermissionsMixin):
+    username = models.CharField(verbose_name='Username', max_length=35, unique=True)
+    full_name = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(max_length=255, unique=True, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     jwt_secret = models.UUIDField(default=uuid.uuid4)
-    # notice the absence of a "Password field", that's built in.
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['full_name', 'username']  # Email & Password are required by default.
 
     objects = RestUserManager()
 
-    def get_full_name(self):
-        return self.full_name
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['full_name', 'email']
 
     def __str__(self):
-         return self.email
-
-    @property
-    def is_staff(self):
-         return self.staff
-
-    @property
-    def is_admin(self):
-         return self.admin
-
-    @property
-    def is_active(self):
-         return self.active
+        return self.username
 
 
 class Idea(models.Model):
-    idea_name = models.CharField(max_length=50, unique=True)
-    owner = models.CharField(max_length=40)
+    idea_name = models.CharField(max_length=35, unique=True)
     description = models.CharField(max_length=300)
     likes = models.IntegerField(default=0)
+    owner = models.CharField(max_length=35)
     created_on = models.DateTimeField(default=datetime.datetime.now())
 
-    USERNAME_FIELD = 'idea_name'
-    REQUIRED_FIELDS = ['owner', 'description']
+    REQUIRED_FIELDS = ['idea_name', 'owner', 'description']
+
+    def __str__(self):
+        return self.idea_name
