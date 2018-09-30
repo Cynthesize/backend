@@ -1,6 +1,8 @@
+from django import forms
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
+from django.contrib.postgres.forms import SimpleArrayField
 import uuid
 import datetime
 
@@ -51,6 +53,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    pinned_ideas = SimpleArrayField(forms.CharField())
     jwt_secret = models.UUIDField(default=uuid.uuid4)
 
     objects = UserManager()
