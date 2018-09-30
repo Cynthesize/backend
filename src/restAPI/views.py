@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from restAPI.models import RestUser, Idea
 from restAPI import serializers as srl
-
+from rest_framework import generics
+from .serializers import IdeaSerializer
 
 class RestUserLogoutAllView(views.APIView):
     """
@@ -40,8 +41,8 @@ class RestUserDeleteView(UserDeleteView):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class RestAddIdeaView(views.APIView):
+class RestAddIdeaView(generics.ListCreateAPIView):
     """Use this endpoint to add ideas in the backend."""
-    model = Idea
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = [srl.IdeaSerializer]
+    queryset = Idea.objects.all()
+    #permission_classes = [permissions.IsAuthenticated]
+    serializer_class = IdeaSerializer
