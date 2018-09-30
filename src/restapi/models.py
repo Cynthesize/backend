@@ -9,7 +9,7 @@ def jwt_get_secret_key(user_model):
     return user_model.jwt_secret
 
 
-class RestUserManager(BaseUserManager):
+class UserManager(BaseUserManager):
     def create_user(self, username, full_name, email, password=None):
         """
         Creates and saves a User with the given email and password.
@@ -44,7 +44,7 @@ class RestUserManager(BaseUserManager):
         return user
 
 
-class RestUser(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(verbose_name='Username', max_length=35, unique=True)
     full_name = models.CharField(max_length=30, blank=True, null=True)
     email = models.EmailField(max_length=255, unique=True, blank=True, null=True)
@@ -53,7 +53,7 @@ class RestUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     jwt_secret = models.UUIDField(default=uuid.uuid4)
 
-    objects = RestUserManager()
+    objects = UserManager()
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['full_name', 'email']

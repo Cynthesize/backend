@@ -50,7 +50,7 @@ This project will focus on Django 2.0.7.
     ```
 9. **Migrate models to database and Collect static files:**
     ```bash
-    python manage.py makemigrations restAPI
+    python manage.py makemigrations restapi
     python manage.py migrate
     python manage.py collectstatic
     ```

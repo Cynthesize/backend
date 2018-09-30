@@ -37,17 +37,17 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.sessions',
     'whitenoise.runserver_nostatic', # Static files on development
     'django.contrib.staticfiles',
-    'rest_framework', # Django rest framework for RESTful API
+    'rest_framework', # Django rest framework for RESTful api
     'djoser',
     # Project apps
-    'restAPI.apps.RestapiConfig',
+    'restapi.apps.RestapiConfig',
 ]
 
 MIDDLEWARE = [
@@ -136,7 +136,7 @@ STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-AUTH_USER_MODEL = 'restAPI.RestUser'
+AUTH_USER_MODEL = 'restapi.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -146,5 +146,5 @@ REST_FRAMEWORK = {
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=15),
-    'JWT_GET_USER_SECRET_KEY': 'restAPI.models.jwt_get_secret_key',
+    'JWT_GET_USER_SECRET_KEY': 'restapi.models.jwt_get_secret_key',
 }
