@@ -49,9 +49,6 @@ class AddIdeaView(generics.ListCreateAPIView):
     serializer_class = IdeaSerializer
 
     def post(self, request, *args, **kwargs):
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print(request.data)
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         idea = Idea(
             owner = request.user,
             idea_name = request.data['idea_name'],
