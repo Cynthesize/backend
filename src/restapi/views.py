@@ -49,10 +49,14 @@ class AddIdeaView(generics.ListCreateAPIView):
     serializer_class = IdeaSerializer
 
     def post(self, request, *args, **kwargs):
+        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print(request.data)
+        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         idea = Idea(
             owner = request.user,
             idea_name = request.data['idea_name'],
-            description = request.data['description']
+            description = request.data['description'],
+            require_assistance = request.data['require_assistance']
         )
         idea.save()
         return Response(status=status.HTTP_201_CREATED)

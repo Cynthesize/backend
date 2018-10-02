@@ -71,10 +71,11 @@ class Idea(models.Model):
 	idea_name = models.CharField(max_length=35, unique=True)
 	description = models.CharField(max_length=300)
 	likes = models.IntegerField(default=0)
+	require_assistance = models.BooleanField(default=False)
 	owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_column='owner')
 	created_on = models.DateTimeField(default=datetime.datetime.now())
 
-	REQUIRED_FIELDS = ['idea_name', 'owner', 'description']
+	REQUIRED_FIELDS = ['idea_name', 'owner', 'description', 'require_assistant']
 
 	def __str__(self):
 		return self.idea_name
