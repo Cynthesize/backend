@@ -8,6 +8,7 @@ from restapi.models import User, Idea
 from restapi import serializers as srl
 from rest_framework import generics
 from .serializers import IdeaSerializer
+from pprint import pprint
 
 class UserLogoutAllView(views.APIView):
     """
@@ -46,3 +47,12 @@ class AddIdeaView(generics.ListCreateAPIView):
     queryset = Idea.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = IdeaSerializer
+
+    def post(self, request, *args, **kwargs):
+        idea = Idea(
+            owner = request.user,
+            idea_name = request.data['idea_name'],
+            description = request.data['description']
+        )
+        idea.save()
+        return Response(status=status.HTTP_201_CREATED)

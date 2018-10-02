@@ -150,6 +150,6 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=15),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=500),
     'JWT_GET_USER_SECRET_KEY': 'restapi.models.jwt_get_secret_key',
 }
