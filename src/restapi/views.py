@@ -44,6 +44,10 @@ class UserAuthDeleteView(UserDeleteView):
 
 class AddIdeaView(generics.ListCreateAPIView):
     """Use this endpoint to add ideas in the backend."""
-    queryset = Idea.objects.all()
+    def get_queryset(self):
+        page = int(self.request.GET['page'])
+        queryset = Idea.objects.all()[page:(page+5)]
+        return queryset
+
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = IdeaSerializer
