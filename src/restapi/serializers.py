@@ -7,4 +7,4 @@ class IdeaSerializer(srl.ModelSerializer):
     class Meta(object):
         model = models.Idea
         fields = ('id', 'idea_name', 'owner', 'created_on',
-                  'description', 'likes')
+                  'description', 'upvotes')

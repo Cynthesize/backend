@@ -56,6 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_admin = models.BooleanField(default=False)
 	is_staff = models.BooleanField(default=False)
 	pinned_ideas = SimpleArrayField(forms.CharField())
+	upvoted_ideas = models.ManyToManyField('Idea', related_name='upvoted_ideas')
 	jwt_secret = models.UUIDField(default=uuid.uuid4)
 
 	objects = UserManager()
@@ -70,7 +71,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Idea(models.Model):
 	idea_name = models.CharField(max_length=35, unique=True)
 	description = models.CharField(max_length=300)
-	likes = models.IntegerField(default=0)
+	upvotes = models.IntegerField(default=0)
 	require_assistance = models.BooleanField(default=False)
 	owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_column='owner')
 	created_on = models.DateTimeField(default=datetime.datetime.now())
