@@ -1,6 +1,6 @@
-# Django RESTful API + JWT authentication Boilerplate
+# Django RESTful API + JWT authentication 
 
-A [Django](https://www.djangoproject.com/) REST API boilerplate.
+A [Django](https://www.djangoproject.com/) REST API .
 this project uses: 
  - **[Django REST framework](http://www.django-rest-framework.org/)** for API.
  - **[JWT](https://jwt.io/)** for authentication process.
@@ -19,9 +19,9 @@ This project will focus on Django 2.0.7.
 ## Getting started (Windows):
 
 1. **Install [Python 3.6](https://www.python.org/)**.
-2. **Clone this repository** or [download the zip](https://github.com/Kamasado/Django-REST-API-JWT-boilerplate/archive/master.zip)
+2. **Clone this repository** or [download the zip](https://github.com/https://github.com/Cynthesize/backend/archive/master.zip)
     ```bash
-    git clone https://github.com/Kamasado/Django-REST-API-JWT-boilerplate
+    git clone https://github.com/Cynthesize/backend/
     ```
 3. **Make sure you're in the directory you just created:**
     ```bash
