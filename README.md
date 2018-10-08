@@ -1,6 +1,6 @@
-# Django RESTful API + JWT authentication Boilerplate
+# Django RESTful API + JWT authentication 
 
-A [Django](https://www.djangoproject.com/) REST API boilerplate.
+A [Django](https://www.djangoproject.com/) REST API .
 this project uses: 
  - **[Django REST framework](http://www.django-rest-framework.org/)** for API.
  - **[JWT](https://jwt.io/)** for authentication process.
