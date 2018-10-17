@@ -57,14 +57,15 @@ class AddIdeaView(generics.ListCreateAPIView):
 def update_upvotes(request, idea_id):
     idea = Idea.objects.get(pk = idea_id)
     user = User.objects.get(pk = request.user.id)
-    upvotes = idea.upvoted_ideas
-    
-    if idea in user.upvoted_ideas.all():
+    is_idea_upvoted = user.upvoted_ideas.filter(idea_id=idea_id)
+    upvotes = idea.upvotes
+
+    if is_idea_upvoted:
         upvotes -= 1
-        user.upvoted_ideas.remove(idea)
+        user.upvoted_ideas.filter(idea_id=idea_id).delete()
     else:
         upvotes += 1
-        user.upvoted_ideas.add(idea)    
+        user.upvoted_ideas.create(idea=idea, user=user)   
     serializer = IdeaSerializer(idea, data = {'upvotes': upvotes}, partial = True)
 
     if serializer.is_valid():

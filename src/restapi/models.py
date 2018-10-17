@@ -55,10 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)
 	is_staff = models.BooleanField(default=False)
-	pinned_ideas = SimpleArrayField(forms.CharField())
-	upvoted_ideas = models.ManyToManyField('Idea', related_name='upvoted_ideas')
 	jwt_secret = models.UUIDField(default=uuid.uuid4)
-
 	objects = UserManager()
 
 	USERNAME_FIELD = 'username'
@@ -67,6 +64,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 	def __str__(self):
 		return self.username
 
+class Pinned_ideas(models.Model):
+	user = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name='pinned_ideas')
+	idea = models.ForeignKey('Idea', on_delete=models.DO_NOTHING)
+
+class Upvoted_ideas(models.Model):
+	user = models.ForeignKey('User', on_delete=models.DO_NOTHING, related_name='upvoted_ideas')
+	idea = models.ForeignKey('Idea', on_delete=models.DO_NOTHING)
 
 class Idea(models.Model):
 	idea_name = models.CharField(max_length=35, unique=True)
