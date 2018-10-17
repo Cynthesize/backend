@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'rest_framework', # Django rest framework for RESTful api
     'djoser',
     # Project apps
-    'restapi.apps.RestapiConfig',
+    'restapi.users',
+    'restapi.ideas'
 ]
 
 MIDDLEWARE = [
@@ -136,7 +137,7 @@ STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-AUTH_USER_MODEL = 'restapi.User'
+AUTH_USER_MODEL = 'users.USER'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -151,5 +152,5 @@ REST_FRAMEWORK = {
 
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=500),
-    'JWT_GET_USER_SECRET_KEY': 'restapi.models.jwt_get_secret_key',
+    'JWT_GET_USER_SECRET_KEY': 'restapi.users.models.jwt_get_secret_key',
 }
