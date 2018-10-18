@@ -11,7 +11,7 @@ from .serializers import IdeaSerializer
 from pprint import pprint
 from rest_framework.decorators import api_view
 
-class AddIdeaView(generics.ListCreateAPIView):
+class IdeaView(generics.ListCreateAPIView):
     """Use this endpoint to add ideas in the backend."""
     def get_queryset(self):
         queryset = Idea.objects.all()
