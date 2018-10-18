@@ -25,7 +25,7 @@ This project will focus on Django 2.0.7.
     ```
 3. **Make sure you're in the directory you just created:**
     ```bash
-    cd django-api-boilerplate
+    cd backend
     ```
 4. **Create a Python venv:**
     ```bash
@@ -33,7 +33,7 @@ This project will focus on Django 2.0.7.
     ```
 5. **Activate the venv:**
     ```bash
-    ".venv/Scripts/activate"
+    "source .venv/bin/activate"
     ```
 6. **Install Python requirements:**
     ```bash
@@ -45,31 +45,36 @@ This project will focus on Django 2.0.7.
     ```
 8. **Set required environment variables:**
     ```bash
-    set DEV=true
-    set DJANGO_SECRET=<YOUR_PROJECT_SECRET>
+    export POSTGRESQL_ADDON_DB='<DB_NAME>'
+    export POSTGRESQL_ADDON_HOST='<DB_HOST>'
+    export POSTGRESQL_ADDON_PASSWORD='<DB_PASSWORD>'
+    export POSTGRESQL_ADDON_PORT='<DB_PORT>'
+    export POSTGRESQL_ADDON_USER='<DB_USER>'
+    export DJANGO_SECRET='<YOUR_DJANGO_SECRET>'
     ```
 9. **Migrate models to database and Collect static files:**
     ```bash
-    python manage.py makemigrations restapi
-    python manage.py migrate
+    python manage.py makemigrations users
+    python manage.py makemigrations ideas
+    python manage.py migrate users
+    python manage.py migrate ideas
     python manage.py collectstatic
     ```
 10. **Run development server:**
     ```bash
-    python manage.py runserver 127.0.0.1:8001
+    python manage.py runserver <PORT_NUMBER>
     ```
 
 ## Deploy (Docker):
 
 Required environment variables:
 ```bash
-POSTGRESQL_ADDON_DB='<server db name>'
-POSTGRESQL_ADDON_HOST='<DB_URL>'
-POSTGRESQL_ADDON_PASSWORD=''
-POSTGRESQL_ADDON_PORT=''
-POSTGRESQL_ADDON_USER=''
-DEV='false'
-DJANGO_SECRET='<YOUR_DJANGO_SECRET>'
+  POSTGRESQL_ADDON_DB='<DB_NAME>'
+  POSTGRESQL_ADDON_HOST='<DB_HOST>'
+  POSTGRESQL_ADDON_PASSWORD='<DB_PASSWORD>'
+  POSTGRESQL_ADDON_PORT='<DB_PORT>'
+  POSTGRESQL_ADDON_USER='<DB_USER>'
+  DJANGO_SECRET='<YOUR_DJANGO_SECRET>'
 ```
 See [Dockerfile](Dockerfile) for details.
 
