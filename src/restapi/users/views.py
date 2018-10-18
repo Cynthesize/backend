@@ -4,10 +4,8 @@ from djoser import serializers
 from rest_framework import views, permissions, status
 from rest_framework.response import Response
 from rest_framework import permissions
-from restapi.models import User, Idea
-from restapi import serializers as srl
+from ..users.models import User
 from rest_framework import generics
-from .serializers import IdeaSerializer
 from pprint import pprint
 from rest_framework.decorators import api_view
 
@@ -41,35 +39,3 @@ class UserAuthDeleteView(UserDeleteView):
     """
     serializer_class = serializers.UserDeleteSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-
-class AddIdeaView(generics.ListCreateAPIView):
-    """Use this endpoint to add ideas in the backend."""
-    def get_queryset(self):
-        page = int(self.request.GET['page'])
-        queryset = Idea.objects.all()[page:(page+5)]
-        return queryset
-
-    permission_classes = [permissions.AllowAny]
-    serializer_class = IdeaSerializer
-
-@api_view(['PUT'])
-def update_upvotes(request, idea_id):
-    idea = Idea.objects.get(pk = idea_id)
-    user = User.objects.get(pk = request.user.id)
-    upvotes = idea.upvoted_ideas
-    
-    if idea in user.upvoted_ideas.all():
-        upvotes -= 1
-        user.upvoted_ideas.remove(idea)
-    else:
-        upvotes += 1
-        user.upvoted_ideas.add(idea)    
-    serializer = IdeaSerializer(idea, data = {'upvotes': upvotes}, partial = True)
-
-    if serializer.is_valid():
-        serializer.save()
-
-        return Response(serializer.data, status.HTTP_201_CREATED)
-
-    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST) 
