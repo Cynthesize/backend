@@ -1,10 +1,10 @@
-from rest_framework import serializers as srl
+from rest_framework import serializers as serializer
 from djoser import serializers
 from . import models
 
 
-class IdeaSerializer(srl.ModelSerializer):
+class IdeaSerializer(serializer.ModelSerializer):
     class Meta(object):
         model = models.Idea
-        fields = ('id', 'idea_name', 'owner', 'created_on',
+        fields = ('id', 'idea_name', 'owner', 'created_on','require_assistance',
                   'description', 'upvotes')

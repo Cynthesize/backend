@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'djoser',
     # Project apps
     'restapi.users',
-    'restapi.ideas'
+    'restapi.ideas',
+    'restapi.comments'
 ]
 
 MIDDLEWARE = [
