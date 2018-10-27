@@ -58,3 +58,14 @@ class UserUpvotedIdeasView(generics.ListCreateAPIView):
     model = models.Upvoted_ideas
     permission_classes = [permissions.AllowAny]
     serializer_class = serializers.UserUpvotedIdeasSerializer
+
+
+class UserPinnedIdeasView(generics.ListCreateAPIView):
+    """Use this endpoint to fetch upvoted ideas from the backend."""
+
+    def get_queryset(self):
+        queryset = models.Pinned_ideas.objects.all()
+        return queryset
+    model = models.Pinned_ideas
+    permission_classes = [permissions.AllowAny]
+    serializer_class = serializers.UserUpvotedIdeasSerializer
