@@ -3,16 +3,15 @@ from djoser.views import UserView, UserDeleteView
 from djoser import serializers
 from rest_framework import views, permissions, status, permissions, generics, filters
 from rest_framework.response import Response
-from ..ideas.models import Idea, User
-from ..ideas.serializers import serializers as srl
+from . import models
+from . import serializers
 from .serializers import IdeaSerializer
-from pprint import pprint
 from rest_framework.decorators import api_view
 
 class IdeaView(generics.ListCreateAPIView):
     """Use this endpoint to add ideas in the backend."""
     def get_queryset(self):
-        queryset = Idea.objects.all()
+        queryset = models.Idea.objects.all()
         idea_id = self.request.query_params.get('id', None)
         idea_cursor = self.request.query_params.get('idea_cursor', None)
 
@@ -25,12 +24,12 @@ class IdeaView(generics.ListCreateAPIView):
             return queryset.filter(id=idea_id)
 
     permission_classes = [permissions.AllowAny]
-    serializer_class = IdeaSerializer
+    serializer_class = serializers.IdeaSerializer
 
 @api_view(['PUT'])
 def update_upvotes(request, idea_id):
-    idea = Idea.objects.get(pk = idea_id)
-    user = User.objects.get(pk = request.user.id)
+    idea = models.Idea.objects.get(pk = idea_id)
+    user = models.User.objects.get(pk = request.user.id)
     is_idea_upvoted = user.upvoted_ideas.filter(idea_id=idea_id)
     upvotes = idea.upvotes
 
@@ -40,7 +39,7 @@ def update_upvotes(request, idea_id):
     else:
         upvotes += 1
         user.upvoted_ideas.create(idea=idea, user=user)   
-    serializer = IdeaSerializer(idea, data = {'upvotes': upvotes}, partial = True)
+    serializer = serializers.IdeaSerializer(idea, data = {'upvotes': upvotes}, partial = True)
 
     if serializer.is_valid():
         serializer.save()
@@ -48,3 +47,14 @@ def update_upvotes(request, idea_id):
         return Response(serializer.data, status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status.HTTP_400_BAD_REQUEST) 
+
+
+class UserUpvotedIdeasView(generics.ListCreateAPIView):
+    """Use this endpoint to fetch upvoted ideas from the backend."""
+
+    def get_queryset(self):
+        queryset = models.Upvoted_ideas.objects.all()
+        return queryset
+    model = models.Upvoted_ideas
+    permission_classes = [permissions.AllowAny]
+    serializer_class = serializers.UserUpvotedIdeasSerializer
