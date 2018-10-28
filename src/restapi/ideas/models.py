@@ -22,8 +22,8 @@ class Idea(models.Model):
 
 class Pinned_ideas(models.Model):
 	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='pinned_ideas')
-	idea_list = ArrayField(models.CharField(max_length=20, blank=True), default=[])
+	idea_list = ArrayField(models.CharField(max_length=20, blank=True), default=list)
 
 class Upvoted_ideas(models.Model):
 	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='upvoted_ideas')
-	idea_list = ArrayField(models.CharField(max_length=20, blank=True), default=[])
+	idea_list = ArrayField(models.CharField(max_length=20, blank=True), default=list)

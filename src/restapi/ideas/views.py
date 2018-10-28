@@ -26,27 +26,32 @@ class IdeaView(generics.ListCreateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = serializers.IdeaSerializer
 
-@api_view(['PUT'])
-def update_upvotes(request, idea_id):
-    idea = models.Idea.objects.get(pk = idea_id)
-    user = models.User.objects.get(pk = request.user.id)
-    is_idea_upvoted = user.upvoted_ideas.filter(idea_id=idea_id)
-    upvotes = idea.upvotes
 
-    if is_idea_upvoted:
-        upvotes -= 1
-        user.upvoted_ideas.filter(idea_id=idea_id).delete()
-    else:
-        upvotes += 1
-        user.upvoted_ideas.create(idea=idea, user=user)   
-    serializer = serializers.IdeaSerializer(idea, data = {'upvotes': upvotes}, partial = True)
+class UpvotesView(views.APIView):
+    permission_classes = [permissions.AllowAny]
+    def put(self, request, idea_id):
+        idea = models.Idea.objects.get(pk = idea_id)
+        user = models.User.objects.get(pk = request.user.id)
+        user_upvoted_ideas = user.upvoted_ideas.get_or_create(user=request.user.id)[0]
 
-    if serializer.is_valid():
-        serializer.save()
+        upvotes = idea.upvotes
 
-        return Response(serializer.data, status.HTTP_201_CREATED)
+        if str(idea_id) in user_upvoted_ideas.idea_list:
+            upvotes -= 1
+            user_upvoted_ideas.idea_list.remove(str(idea_id))
+            user.upvoted_ideas.update(idea_list=user_upvoted_ideas.idea_list)
+        else:
+            upvotes += 1
+            user_upvoted_ideas.idea_list.append(str(idea_id))
+            user.upvoted_ideas.update(idea_list=user_upvoted_ideas.idea_list)
 
-    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST) 
+        serializer = IdeaSerializer(idea, data = {'upvotes': upvotes}, partial = True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
 class UserUpvotedIdeasView(generics.ListCreateAPIView):
