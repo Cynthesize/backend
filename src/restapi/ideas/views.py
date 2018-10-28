@@ -49,7 +49,13 @@ class UpvotesView(views.APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status.HTTP_201_CREATED)
+
+            response_dict = serializer.data.copy()
+            response_dict['user'] = False
+            if str(idea_id) in user_upvoted_ideas.idea_list:
+                response_dict['user'] = True
+
+            return Response(response_dict, status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
