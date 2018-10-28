@@ -8,3 +8,13 @@ class IdeaSerializer(serializer.ModelSerializer):
         model = models.Idea
         fields = ('id', 'idea_name', 'owner', 'created_on','require_assistance',
                   'description', 'upvotes')
+
+class UserUpvotedIdeasSerializer(serializer.ModelSerializer):
+    class Meta(object):
+        model = models.Upvoted_ideas
+        fields = ('user', 'idea_list')
+
+class UserPinnedIdeasSerializer(serializer.ModelSerializer):
+    class Meta(object):
+        model = models.Pinned_ideas
+        fields = ('user', 'idea_list')

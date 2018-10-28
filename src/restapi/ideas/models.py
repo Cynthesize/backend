@@ -2,7 +2,7 @@ from django import forms
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
-from django.contrib.postgres.forms import SimpleArrayField
+from django.contrib.postgres.fields import ArrayField
 from ..users.models import User as User
 import uuid
 import datetime
@@ -22,8 +22,8 @@ class Idea(models.Model):
 
 class Pinned_ideas(models.Model):
 	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='pinned_ideas')
-	idea = models.ForeignKey('Idea', on_delete=models.DO_NOTHING)
+	idea_list = ArrayField(models.CharField(max_length=20, blank=True), default=list)
 
 class Upvoted_ideas(models.Model):
 	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='upvoted_ideas')
-	idea = models.ForeignKey('Idea', on_delete=models.DO_NOTHING)
+	idea_list = ArrayField(models.CharField(max_length=20, blank=True), default=list)

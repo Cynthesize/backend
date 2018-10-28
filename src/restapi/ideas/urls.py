@@ -5,5 +5,7 @@ from ..ideas import views as views
 
 urlpatterns = [
     path('', views.IdeaView.as_view(), name='api-add-idea'),
-    path('vote/<int:idea_id>', views.update_upvotes, name='update-upvotes'),
+    path('vote/<int:idea_id>', views.UpvotesView.as_view(), name='update-upvotes'),
+    path('liked_ideas', views.UserUpvotedIdeasView.as_view(), name='api-liked-idea'),
+    path('pinned_ideas', views.UserPinnedIdeasView.as_view(), name='api-pinned-idea')
 ]
