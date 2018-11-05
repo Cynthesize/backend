@@ -1,16 +1,13 @@
-# Django RESTful API + JWT authentication 
+# Cynthesize
 
-A [Django](https://www.djangoproject.com/) REST API .
-this project uses: 
- - **[Django REST framework](http://www.django-rest-framework.org/)** for API.
- - **[JWT](https://jwt.io/)** for authentication process.
+### Django Backend
 
-## Table of content
+[![Join the chat at https://gitter.im/oppia/oppia-chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Cynthesize-gitter/Lobby)
 
-- [Django version](#django-version)
-- [Getting started (Windows)](#getting-started-windows)
-- [Deploy (Docker)](#deploy-docker)
-- [License](#license)
+## Setting up PostgreSQL
+- **[Windows](https://doc.odoo.com/7.0/install/windows/postgres/)**: 
+- **[Linux(Ubuntu)](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04)**: 
+- **[MacOSx](https://www.codementor.io/engineerapart/getting-started-with-postgresql-on-mac-osx-are8jcopb)**: 
 
 ## Django version
 
