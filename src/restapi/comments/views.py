@@ -1,20 +1,28 @@
 import uuid
-from djoser.views import UserView, UserDeleteView
-from djoser import serializers
-from rest_framework import views, permissions, status
-from rest_framework.response import Response
-from rest_framework import permissions
-from ..comments.models import Comments, Replies
-from rest_framework import generics
+from . import models
 from .serializers import CommentSerializer, ReplySerializer
-from pprint import pprint
+from ..comments.models import Comments, Replies
+from djoser.views import UserView, UserDeleteView
+from rest_framework import views, permissions, status, generics, permissions
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-class CommentView(generics.ListCreateAPIView):
+class CommentView(generics.RetrieveAPIView):
     """Use this endpoint to add ideas in the backend."""
     def get_queryset(self):
         queryset = Comments.objects.all()
         return queryset
+
+    def retrieve(self, *args, **kwargs):
+        comment_object = {}
+        idea = models.Idea.objects.get(pk = 1)
+        comment_list = idea.comments_set.filter(idea=idea)
+        for comment in comment_list:
+            replies_list = comment.replies_set.filter(comment=comment)
+            comment_object[comment.text] = []
+            for replies in replies_list:
+                comment_object[comment.text].append(replies.text)
+        return Response(comment_object, status.HTTP_201_CREATED)
 
     permission_classes = [permissions.AllowAny]
     serializer_class = CommentSerializer
