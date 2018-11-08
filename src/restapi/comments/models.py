@@ -19,6 +19,16 @@ class Comments(models.Model):
 	REQUIRED_FIELDS = ['text', 'user', 'idea']
 	def __str__(self):
 		return self.text
+	
+	def to_dict(self):
+		return {
+			'text': self.text,
+			'user': self.user.username,
+			'idea': self.idea.id,
+			'likes': self.likes,
+			'dislikes': self.dislikes,
+			'commented_at': self.commented_at
+		}
 
 class Replies(models.Model):
 	text = models.CharField(max_length=500)
@@ -31,3 +41,13 @@ class Replies(models.Model):
 	REQUIRED_FIELDS = ['text', 'comment', 'user']
 	def __str__(self):
 		return self.text
+	
+	def to_dict(self):
+		return {
+			'text': self.text,
+			'user': self.user.username,
+			'comment': self.comment.id,
+			'likes': self.likes,
+			'dislikes': self.dislikes,
+			'replied_at': self.replied_at
+		}
