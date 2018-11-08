@@ -7,6 +7,7 @@ from rest_framework import views, permissions, status, generics, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+
 class RetrieveCommentView(generics.RetrieveAPIView):
     """Use this endpoint to add ideas in the backend."""
     def get_queryset(self):
@@ -17,11 +18,11 @@ class RetrieveCommentView(generics.RetrieveAPIView):
         comment_object = {}
         idea = models.Idea.objects.get(pk = kwargs['idea_id'])
         comment_list = idea.comments_set.filter(idea=idea)
-        for comment in comment_list:
+        for ind, comment in enumerate(comment_list):
             replies_list = comment.replies_set.filter(comment=comment)
-            comment_object[comment.text] = []
+            comment_object[ind] = [comment.to_dict()]
             for replies in replies_list:
-                comment_object[comment.text].append(replies.text)
+                comment_object[ind].append(replies.to_dict())
         return Response(comment_object, status.HTTP_201_CREATED)
 
     permission_classes = [permissions.AllowAny]
