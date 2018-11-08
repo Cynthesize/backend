@@ -15,15 +15,18 @@ class RetrieveCommentView(generics.RetrieveAPIView):
         return queryset
 
     def retrieve(self, *args, **kwargs):
-        comment_object = {}
+        comments = []
         idea = models.Idea.objects.get(pk = kwargs['idea_id'])
         comment_list = idea.comments_set.filter(idea=idea)
-        for ind, comment in enumerate(comment_list):
+        for comment in comment_list:
             replies_list = comment.replies_set.filter(comment=comment)
-            comment_object[ind] = [comment.to_dict()]
-            for replies in replies_list:
-                comment_object[ind].append(replies.to_dict())
-        return Response(comment_object, status.HTTP_201_CREATED)
+            comment_dict = comment.to_dict()
+            replies = []
+            for reply in replies_list:
+                replies.append(reply.to_dict())
+            comment_dict['replies'] = replies
+            comments.append(comment_dict)
+        return Response(comments, status.HTTP_201_CREATED)
 
     permission_classes = [permissions.AllowAny]
     serializer_class = CommentSerializer
