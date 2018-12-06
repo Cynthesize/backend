@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # Project apps
     'restapi.users',
     'restapi.ideas',
+    'restapi.project',
     'restapi.comments'
 ]
 
