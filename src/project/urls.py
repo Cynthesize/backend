@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/user/', include('restapi.users.urls')),
     path('api/idea/', include('restapi.ideas.urls')),
+    path('api/project/', include('restapi.project.urls')),
     path('api/comment/', include('restapi.comments.urls'))
 ]
