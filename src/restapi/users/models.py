@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.postgres.forms import SimpleArrayField
+from django.contrib.postgres.fields import ArrayField
+
 import uuid
 import datetime
 
@@ -57,6 +59,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_admin = models.BooleanField(default=False)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
+	birth_date = models.DateField(null=True)
+	technologies = ArrayField(models.CharField(max_length=20, blank=True, null=True), default=list)
+	bio = models.CharField(max_length=255, null=True)
+	social_links = ArrayField(models.CharField(max_length=100, blank=True, null=True), default=list)
 	jwt_secret = models.UUIDField(default=uuid.uuid4)
 	objects = UserManager()
 

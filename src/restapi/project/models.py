@@ -5,8 +5,6 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.postgres.fields import ArrayField
 from ..users.models import User as User
 
-from djongo import models
-
 import uuid
 import datetime
 
