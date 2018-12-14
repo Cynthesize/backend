@@ -1,10 +1,14 @@
 import uuid
 from djoser.views import UserView, UserDeleteView
 from djoser import serializers
+from django.core import serializers as serializer
 from rest_framework import views, permissions, status
 from rest_framework.response import Response
+from django.http import HttpResponse
 from rest_framework import permissions
 from ..users.models import User
+from ..ideas.models import Idea
+from .serializers import UserSerializer
 from rest_framework import generics
 from pprint import pprint
 from rest_framework.decorators import api_view
@@ -22,15 +26,25 @@ class UserLogoutAllView(views.APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class UserAuthView(UserView):
-    """
-    Uses the default Djoser view, but add the IsOtpVerified permission.
-    Use this endpoint to retrieve/update user.
-    """
-    model = User
-    serializer_class = serializers.UserSerializer
+class UserAuthView(generics.ListCreateAPIView):
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        queryset = User.objects.all()
+
+        return queryset.filter(pk=user_id)
+
     permission_classes = [permissions.IsAuthenticated]
- 
+    serializer_class = UserSerializer
+
+
+class UserIdeaView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        ideas = Idea.objects.filter(owner = request.user.id) 
+        data = serializer.serialize('json', ideas)
+
+        return HttpResponse(data, content_type="application/json")
 
 class UserAuthDeleteView(UserDeleteView):
     """
