@@ -28,12 +28,12 @@ class UserLogoutAllView(views.APIView):
 
 class UserAuthView(generics.ListCreateAPIView):
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
+        user_id = self.kwargs['username']
         queryset = User.objects.all()
 
-        return queryset.filter(pk=user_id)
+        return queryset.filter(username=user_id)
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     serializer_class = UserSerializer
 
 
