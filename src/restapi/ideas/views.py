@@ -28,7 +28,7 @@ class IdeaView(generics.ListCreateAPIView):
 
 
 class UpvotesView(views.APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
     def put(self, request, idea_id):
         idea = models.Idea.objects.get(pk = idea_id)
         user = models.User.objects.get(pk = request.user.id)

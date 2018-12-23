@@ -4,5 +4,6 @@ from rest_framework_jwt import views as jwt_views
 from ..project import views as views
 
 urlpatterns = [
-    path('', views.ProjectView.as_view(), name='api-add-project')
+    path('', views.ProjectView.as_view(), name='api-add-project'),
+    path('issue', views.IssueView.as_view(), name='api-add-issue')
 ]

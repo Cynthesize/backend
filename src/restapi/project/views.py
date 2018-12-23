@@ -23,3 +23,18 @@ class ProjectView(generics.ListCreateAPIView):
 
     permission_classes = [permissions.AllowAny]
     serializer_class = serializers.ProjectSerializer
+
+class IssueView(generics.ListCreateAPIView):
+    """Use this endpoint to add projects in the backend."""
+
+    def get_queryset(self):
+        queryset = models.Issue.objects.all()
+        issue_id = self.request.query_params.get('id', None)
+
+        if issue_id is None:
+            return queryset
+        else:
+            return queryset.filter(id=issue_id)
+
+    permission_classes = [permissions.AllowAny]
+    serializer_class = serializers.IssueSerializer
