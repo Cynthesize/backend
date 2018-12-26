@@ -22,6 +22,7 @@ class Comments(models.Model):
 	
 	def to_dict(self):
 		return {
+			'id': self.id,
 			'text': self.text,
 			'user': self.user.username,
 			'idea': self.idea.id,

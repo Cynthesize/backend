@@ -20,7 +20,7 @@ class Project(models.Model):
         owner: User. ID of the owner of the project.
         created_on: timestamp. Timestamp of creation of project.
         current_stage: str. The current stage that the user can define for the project.
-        area_of_issues_open: list(). 
+        area_of_issues_open: list().
         watching: list(User). List of users that are currently watching the project.
         endorsements: list(User). List of users that are in favor of the project.
     """
@@ -97,6 +97,22 @@ class IssueComment(models.Model):
         Project, on_delete=models.DO_NOTHING, db_column='project_id')
     timestamp = models.DateTimeField(default=datetime.datetime.now())
 
+    REQUIRED_FIELDS = ['comment_text', 'commenter', 'project_id', 'issue_id']
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'comment_text': self.comment_text,
+            'commenter': self.commenter.username,
+            'idea': self.idea.id,
+            'likes': self.likes,
+            'comment_replies': self.comment_replies,
+            'issue_id': self.issue_id,
+            'previous_edits': self.previous_edits,
+            'project_id': self.project_id,
+            'timestamp': self.timestamp
+        }
+
 
 class IssueReply(models.Model):
     """ Model for reply of a comment on an issue.
@@ -117,3 +133,19 @@ class IssueReply(models.Model):
     likes = models.IntegerField(default=0)
     previous_edits = ArrayField(models.TextField(), default=list)
     timestamp = models.DateTimeField(default=datetime.datetime.now())
+
+    REQUIRED_FIELDS = ['comment_id', 'reply_text', 'respondent']
+
+    def __str__(self):
+        return self.reply_text
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'reply_text': self.reply_text,
+            'respondent': self.respondent.username,
+            'comment_id': self.comment_id,
+            'likes': self.likes,
+            'previous_edits': self.previous_edits,
+            'timestamp': self.timestamp
+        }
