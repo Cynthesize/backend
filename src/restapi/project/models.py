@@ -104,7 +104,6 @@ class IssueComment(models.Model):
             'id': self.id,
             'comment_text': self.comment_text,
             'commenter': self.commenter.username,
-            'idea': self.idea.id,
             'likes': self.likes,
             'comment_replies': self.comment_replies,
             'issue_id': self.issue_id,

@@ -5,5 +5,6 @@ from ..project import views as views
 
 urlpatterns = [
     path('', views.ProjectView.as_view(), name='api-add-project'),
+    path('issue/replies', views.IssueReplyView.as_view(), name='api-add-project'),
     path('issue', views.IssueView.as_view(), name='api-add-issue')
 ]

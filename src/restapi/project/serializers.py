@@ -27,5 +27,5 @@ class IssueCommentSerializer(serializer.ModelSerializer):
 class IssueReplySerializer(serializer.ModelSerializer):
     class Meta(object):
         model = models.IssueReply
-        fields = ('comment_id', 'comment_text', 'respondent', 'likes',
+        fields = ('comment_id', 'reply_text', 'respondent', 'likes',
                   'previous_edits', 'timestamp')
