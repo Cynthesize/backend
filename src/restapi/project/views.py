@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from . import models
 from . import serializers
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.http import HttpResponse
 
 
 class ProjectView(generics.ListCreateAPIView):
@@ -50,7 +52,16 @@ class IssueView(generics.ListCreateAPIView):
         if issue_id is None:
             return queryset
         else:
-            return queryset.filter(id=issue_id)
+            issue = models.Issue.objects.get(pk=issue_id)
+            comments = list(models.IssueComment.objects.filter(issue_id=issue_id))
+            for comment in comments:
+                replies = list(models.IssueReply.objects.filter(comment_id=comment.id))
+                for reply in replies:
+                    comment.comment_replies.append(reply.to_dict())
+                issue.comments.append(comment.to_dict())
+
+            return [issue]
+
 
     def put(self, request):
         update_reference = self.request.data['update_reference']
