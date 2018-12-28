@@ -33,6 +33,23 @@ class UserAuthView(generics.ListCreateAPIView):
 
         return queryset.filter(username=user_id)
 
+
+    def put(self, request):
+        update_reference = self.request.data['update_reference']
+        username = self.request.data['username']
+        new_value = self.request.data['new_value']
+
+        user = models.User.objects.get(id=username)
+
+        serializer = serializers.UserSerializer(
+            user, data={update_reference: new_value}, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
     permission_classes = [permissions.AllowAny]
     serializer_class = UserSerializer
 

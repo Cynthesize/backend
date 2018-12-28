@@ -70,6 +70,18 @@ class Issue(models.Model):
     project_id = models.ForeignKey(
         Project, on_delete=models.DO_NOTHING, db_column='project_id')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'checkpoint_name': self.checkpoint_name,
+            'comments': self.comments,
+            'created_by': self.created_by,
+            'created_on': self.created_on,
+            'description': self.description,
+            'is_resolved': self.is_resolved,
+            'project_id': self.project_id,
+        }
+
 
 class IssueComment(models.Model):
     """ Model for comments on an issue.
