@@ -6,8 +6,7 @@ from rest_framework.response import Response
 from . import models
 from . import serializers
 from rest_framework.decorators import api_view
-from django.http import HttpResponse
-import json
+from rest_framework.response import Response
 
 
 class ProjectView(generics.ListCreateAPIView):
