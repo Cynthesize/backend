@@ -3,8 +3,7 @@ from djoser.views import UserView, UserDeleteView
 from djoser import serializers
 from rest_framework import views, permissions, status, permissions, generics, filters
 from rest_framework.response import Response
-from . import models
-from . import serializers
+from . import models, serializers, constants
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import HttpResponse
@@ -20,7 +19,17 @@ class ProjectView(generics.ListCreateAPIView):
         if project_id is None:
             return queryset
         else:
-            return queryset.filter(id=project_id)
+            try:
+                project = models.Project.objects.get(pk=project_id)
+            except:
+                return []
+            project_issues = models.Issue.objects.filter(project_id=project.id)
+            checkpoint_data = constants.CHECKPOINT_CATEGORIES_DATA
+            for issue in project_issues:
+                checkpoint_data[issue.checkpoint_name].append(issue)
+            project.area_of_issues_open.append(checkpoint_data)
+            return [project]
+
 
     def put(self, request):
         update_reference = self.request.data['update_reference']
