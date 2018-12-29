@@ -46,6 +46,22 @@ class Project(models.Model):
     def __str__(self):
         return self.project_name
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'project_name': self.project_name,
+            'project_id': self.project_id,
+            'collaborators': self.collaborators,
+            'description': self.description,
+            'owner': self.owner.username,
+            'created_on': self.created_on,
+            'current_stage': self.current_stage,
+            'area_of_issues_open': self.area_of_issues_open,
+            'watching': self.watching,
+            'endorsements': self.endorsements,
+            'timestamp': self.timestamp
+        }
+
 
 class Issue(models.Model):
     """ Model for Issue of each checkpoint.
