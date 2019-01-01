@@ -91,11 +91,11 @@ class Issue(models.Model):
             'id': self.id,
             'checkpoint_name': self.checkpoint_name,
             'comments': self.comments,
-            'created_by': self.created_by,
+            'created_by': self.created_by.username,
             'created_on': self.created_on,
             'description': self.description,
             'is_resolved': self.is_resolved,
-            'project_id': self.project_id,
+            'project_id': self.project_id.id,
         }
 
 
@@ -134,9 +134,9 @@ class IssueComment(models.Model):
             'commenter': self.commenter.username,
             'likes': self.likes,
             'comment_replies': self.comment_replies,
-            'issue_id': self.issue_id,
+            'issue_id': self.issue_id.id,
             'previous_edits': self.previous_edits,
-            'project_id': self.project_id,
+            'project_id': self.project_id.id,
             'timestamp': self.timestamp
         }
 
@@ -171,7 +171,7 @@ class IssueReply(models.Model):
             'id': self.id,
             'reply_text': self.reply_text,
             'respondent': self.respondent.username,
-            'comment_id': self.comment_id,
+            'comment_id': self.comment_id.id,
             'likes': self.likes,
             'previous_edits': self.previous_edits,
             'timestamp': self.timestamp

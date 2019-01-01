@@ -41,7 +41,6 @@ class ProjectView(views.APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     def put(self, request):
         update_reference = self.request.data['update_reference']
         project_id = self.request.data['project_id']
@@ -62,29 +61,42 @@ class ProjectView(views.APIView):
     serializer_class = serializers.ProjectSerializer
 
 
-class IssueView(generics.ListCreateAPIView):
+class IssueView(views.APIView):
     """Use this endpoint to add projects in the backend."""
 
-    def get_queryset(self):
+    def get(self, request):
         queryset = models.Issue.objects.all()
-        issue_id = self.request.query_params.get('id', None)
+        issue_ids = self.request.query_params.get('id', None)
 
-        if issue_id is None:
-            return queryset
+        if issue_ids is None:
+            response = []
+            for issue in list(queryset):
+                response.append(issue.to_dict())
+            return Response(response)
         else:
-            try:
-                issue = models.Issue.objects.get(pk=issue_id)
-            except:
-                return []
-            comments = issue.issuecomment_set.filter(issue_id=issue_id)
-            for comment in comments:
-                replies = comment.issuereply_set.filter(comment_id=comment.id)
-                for reply in replies:
-                    comment.comment_replies.append(reply.to_dict())
-                issue.comments.append(comment.to_dict())
+            issue_list = []
+            for issue_id in issue_ids:
+                try:
+                    issue = models.Issue.objects.get(pk=issue_id)
+                except:
+                    return []
+                comments = issue.issuecomment_set.filter(issue_id=issue_id)
+                for comment in comments:
+                    replies = comment.issuereply_set.filter(
+                        comment_id=comment.id)
+                    for reply in replies:
+                        comment.comment_replies.append(reply.to_dict())
+                    issue.comments.append(comment.to_dict())
+                issue_list.append(issue.to_dict())
 
-            return [issue]
+            return Response(issue_list)
 
+    def post(self, request):
+        serializer = serializers.IssueSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
         update_reference = self.request.data['update_reference']
