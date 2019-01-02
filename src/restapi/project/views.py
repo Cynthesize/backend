@@ -6,17 +6,21 @@ from rest_framework.response import Response
 from . import models, serializers, constants
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.http import HttpResponse
 
 
-class ProjectView(generics.ListCreateAPIView):
+class ProjectView(views.APIView):
     """Use this endpoint to add projects in the backend."""
 
-    def get_queryset(self):
+    def get(self, request):
         queryset = models.Project.objects.all()
         project_id = self.request.query_params.get('id', None)
 
         if project_id is None:
-            return queryset
+            response = []
+            for project in list(queryset):
+                response.append(project.to_dict())
+            return Response(response)
         else:
             try:
                 project = models.Project.objects.get(pk=project_id)
@@ -25,10 +29,17 @@ class ProjectView(generics.ListCreateAPIView):
             project_issues = models.Issue.objects.filter(project_id=project.id)
             checkpoint_data = constants.CHECKPOINT_CATEGORIES_DATA
             for issue in project_issues:
-                checkpoint_data[issue.checkpoint_name].append(issue)
+                if issue.id not in checkpoint_data[issue.checkpoint_name]:
+                    checkpoint_data[issue.checkpoint_name].append(issue.id)
             project.area_of_issues_open.append(checkpoint_data)
-            return [project]
+            return Response(project.to_dict())
 
+    def post(self, request):
+        serializer = serializers.ProjectSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
         update_reference = self.request.data['update_reference']
@@ -50,29 +61,42 @@ class ProjectView(generics.ListCreateAPIView):
     serializer_class = serializers.ProjectSerializer
 
 
-class IssueView(generics.ListCreateAPIView):
+class IssueView(views.APIView):
     """Use this endpoint to add projects in the backend."""
 
-    def get_queryset(self):
+    def get(self, request):
         queryset = models.Issue.objects.all()
-        issue_id = self.request.query_params.get('id', None)
+        issue_ids = self.request.query_params.get('id', None)
 
-        if issue_id is None:
-            return queryset
+        if issue_ids is None:
+            response = []
+            for issue in list(queryset):
+                response.append(issue.to_dict())
+            return Response(response)
         else:
-            try:
-                issue = models.Issue.objects.get(pk=issue_id)
-            except:
-                return []
-            comments = issue.issuecomment_set.filter(issue_id=issue_id)
-            for comment in comments:
-                replies = comment.issuereply_set.filter(comment_id=comment.id)
-                for reply in replies:
-                    comment.comment_replies.append(reply.to_dict())
-                issue.comments.append(comment.to_dict())
+            issue_list = []
+            for issue_id in issue_ids:
+                try:
+                    issue = models.Issue.objects.get(pk=issue_id)
+                except:
+                    return []
+                comments = issue.issuecomment_set.filter(issue_id=issue_id)
+                for comment in comments:
+                    replies = comment.issuereply_set.filter(
+                        comment_id=comment.id)
+                    for reply in replies:
+                        comment.comment_replies.append(reply.to_dict())
+                    issue.comments.append(comment.to_dict())
+                issue_list.append(issue.to_dict())
 
-            return [issue]
+            return Response(issue_list)
 
+    def post(self, request):
+        serializer = serializers.IssueSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
         update_reference = self.request.data['update_reference']
