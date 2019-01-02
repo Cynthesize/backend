@@ -1,4 +1,5 @@
 import uuid
+import datetime
 from djoser.views import UserView, UserDeleteView
 from djoser import serializers
 from django.core import serializers as serializer
@@ -12,6 +13,7 @@ from .serializers import UserSerializer
 from rest_framework import generics
 from pprint import pprint
 from rest_framework.decorators import api_view
+
 
 class UserLogoutAllView(views.APIView):
     """
@@ -28,27 +30,26 @@ class UserLogoutAllView(views.APIView):
 
 class UserAuthView(generics.ListCreateAPIView):
     def get_queryset(self):
-        user_id = self.kwargs['username']
+        username = self.request.query_params.get('username', None)
         queryset = User.objects.all()
 
-        return queryset.filter(username=user_id)
-
+        return queryset.filter(username=username)
 
     def put(self, request):
-        update_reference = self.request.data['update_reference']
+        bio = self.request.data['bio']
+        technologies = self.request.data['technologies'].split(',')[:-1]
+        birth_date = self.request.data['birth_date']
+        location = self.request.data['location']
         username = self.request.data['username']
-        new_value = self.request.data['new_value']
+        website = self.request.data['website']
 
-        user = models.User.objects.get(id=username)
-
-        serializer = serializers.UserSerializer(
-            user, data={update_reference: new_value}, partial=True)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+        try:
+            User.objects.filter(username=username).update(
+                bio=bio, technologies=technologies, birth_date=birth_date, location=location,
+                website=website)
+            return Response(status.HTTP_201_CREATED)
+        except:
+            return Response(status.HTTP_400_BAD_REQUEST)
 
     permission_classes = [permissions.AllowAny]
     serializer_class = UserSerializer
@@ -56,12 +57,13 @@ class UserAuthView(generics.ListCreateAPIView):
 
 class UserIdeaView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get(self, request):
-        ideas = Idea.objects.filter(owner = request.user.id) 
+        ideas = Idea.objects.filter(owner=request.user.id)
         data = serializer.serialize('json', ideas)
 
         return HttpResponse(data, content_type="application/json")
+
 
 class UserAuthDeleteView(UserDeleteView):
     """

@@ -50,19 +50,22 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-	username = models.CharField(
-		verbose_name='Username', max_length=35, unique=True)
-	full_name = models.CharField(max_length=30, blank=True, null=True)
+	bio = models.CharField(max_length=255, null=True)
+	birth_date = models.DateField(null=True)
 	email = models.EmailField(
 			max_length=255, unique=True, blank=True, null=True)
+	full_name = models.CharField(max_length=30, blank=True, null=True)
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
-	birth_date = models.DateField(null=True)
-	technologies = ArrayField(models.CharField(max_length=20, blank=True, null=True), default=list)
-	bio = models.CharField(max_length=255, null=True)
+	location = models.CharField(max_length=15, null=True)
+	profile_pic = models.URLField(default='/assets/user.png')
 	social_links = ArrayField(models.CharField(max_length=100, blank=True, null=True), default=list)
+	technologies = ArrayField(models.CharField(max_length=20, blank=True, null=True), default=list)
+	username = models.CharField(
+		verbose_name='Username', max_length=35, unique=True)
+	website = models.URLField(null=True)
 	jwt_secret = models.UUIDField(default=uuid.uuid4)
 	objects = UserManager()
 

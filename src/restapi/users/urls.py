@@ -4,7 +4,7 @@ from rest_framework_jwt import views as jwt_views
 from ..users import views as views
 
 urlpatterns = [
-    path('view/<slug:username>', views.UserAuthView.as_view(), name='api-view'),
+    path('view', views.UserAuthView.as_view(), name='api-view'),
     path('ideas', views.UserIdeaView.as_view(), name='user-ideas'),
     path('delete/', views.UserAuthDeleteView.as_view(), name='api-delete'),
     path('logout/all/', views.UserLogoutAllView.as_view(), name='api-logout-all'),
