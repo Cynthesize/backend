@@ -29,8 +29,11 @@ class ProjectView(views.APIView):
             project_issues = models.Issue.objects.filter(project_id=project.id)
             checkpoint_data = constants.CHECKPOINT_CATEGORIES_DATA
             for issue in project_issues:
-                if issue.id not in checkpoint_data[issue.checkpoint_name]:
-                    checkpoint_data[issue.checkpoint_name].append(issue.id)
+                try:
+                    if issue.id not in checkpoint_data[issue.checkpoint_name]:
+                        checkpoint_data[issue.checkpoint_name].append(issue.id)
+                except:
+                    pass
             project.area_of_issues_open.append(checkpoint_data)
             return Response(project.to_dict())
 
