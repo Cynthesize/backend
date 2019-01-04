@@ -23,9 +23,9 @@ class ProjectView(views.APIView):
             return Response(response)
         else:
             try:
-                project = models.Project.objects.get(pk=project_id)
+                project = models.Project.objects.get(project_id=project_id)
             except:
-                return []
+                return Response([])
             project_issues = models.Issue.objects.filter(project_id=project.id)
             checkpoint_data = constants.CHECKPOINT_CATEGORIES_DATA
             for issue in project_issues:
