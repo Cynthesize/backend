@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from rest_framework import permissions
 from ..users.models import User
 from ..ideas.models import Idea
+from ..project.models import Project
 from .serializers import UserSerializer
 from rest_framework import generics
 from pprint import pprint
@@ -72,3 +73,30 @@ class UserAuthDeleteView(UserDeleteView):
     """
     serializer_class = serializers.UserDeleteSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class UserContributionsView(views.APIView):
+    """Use this endpoint to return users' contribution across various
+    categories.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        try:
+            username = self.request.query_params.get('username')
+            user = User.objects.get(username=username)
+            ideas = Idea.objects.filter(owner=user.id)
+            projects = Project.objects.filter(owner=user.id)
+            response_object = {
+                'project_list': [],
+                'idea_list': []
+            }
+            if projects:
+                for project in projects:
+                    response_object['project_list'].append(project.to_short_dict())
+            if ideas:
+                for idea in ideas:
+                    response_object['idea_list'].append(idea.to_short_dict())
+            return Response(response_object)
+        except:
+            return Response(status.HTTP_400_BAD_REQUEST)

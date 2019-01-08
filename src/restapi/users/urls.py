@@ -5,6 +5,7 @@ from ..users import views as views
 
 urlpatterns = [
     path('view', views.UserAuthView.as_view(), name='api-view'),
+    path('contrib', views.UserContributionsView.as_view(), name='api-view'),
     path('ideas', views.UserIdeaView.as_view(), name='user-ideas'),
     path('delete/', views.UserAuthDeleteView.as_view(), name='api-delete'),
     path('logout/all/', views.UserLogoutAllView.as_view(), name='api-logout-all'),

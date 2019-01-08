@@ -62,6 +62,17 @@ class Project(models.Model):
             'timestamp': self.timestamp
         }
 
+    def to_short_dict(self):
+        return {
+            'project_name': self.project_name,
+            'project_id': self.project_id,
+            'collaborators': self.collaborators,
+            'owner': self.owner.username,
+            'created_on': self.created_on,
+            'current_stage': self.current_stage,
+            'watching': len(self.watching)
+        }
+
 
 class Issue(models.Model):
     """ Model for Issue of each checkpoint.

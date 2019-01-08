@@ -78,7 +78,7 @@ class IssueView(views.APIView):
             return Response(response)
         else:
             issue_list = []
-            for issue_id in issue_ids:
+            for issue_id in issue_ids.split(',')[:-1]:
                 try:
                     issue = models.Issue.objects.get(pk=issue_id)
                 except:
