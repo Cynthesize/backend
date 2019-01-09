@@ -8,8 +8,7 @@ CHECKPOINT_NAMES = [
     "Security",
     "Funding",
     "Team",
-    "Miscellaneous",
-    "design"
+    "Miscellaneous"
 ]
 
 CHECKPOINT_CATEGORIES_DATA = {}
