@@ -27,7 +27,10 @@ class ProjectView(views.APIView):
             except:
                 return Response([])
             project_issues = models.Issue.objects.filter(project_id=project.id)
-            checkpoint_data = constants.CHECKPOINT_CATEGORIES_DATA
+            checkpoint_data = {}
+            for name in constants.CHECKPOINT_NAMES:
+                checkpoint_data[name] = []
+
             for issue in project_issues:
                 try:
                     if issue.id not in checkpoint_data[issue.checkpoint_name]:
@@ -121,10 +124,10 @@ class IssueView(views.APIView):
     serializer_class = serializers.IssueSerializer
 
 
-class IssueCommentView(generics.ListCreateAPIView):
+class IssueCommentView(views.APIView):
     """Use this endpoint to add issue comments in the backend."""
 
-    def get_queryset(self):
+    def get(self):
         queryset = models.IssueComment.objects.all()
         comment_id = self.request.query_params.get('id', None)
 
@@ -132,6 +135,16 @@ class IssueCommentView(generics.ListCreateAPIView):
             return queryset
         else:
             return queryset.filter(id=comment_id)
+
+    def post(self, request):
+        project = models.Project.objects.get(
+            project_id=request.data['project_id'])
+        request.data['project_id'] = project.id
+        serializer = serializers.IssueCommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
         update_reference = self.request.data['update_reference']
